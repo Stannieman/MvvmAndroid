@@ -1,0 +1,69 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0.0.0"
+    }
+
+    dataBinding {
+        enabled = true
+    }
+}
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:25.1.1'
+    compile 'com.google.dagger:dagger:2.9'
+}
+
+task createJavaDoc(type: Javadoc) {
+    failOnError false
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task createJavaDocJar(type: Jar, dependsOn: createJavaDoc) {
+    classifier = 'javadoc'
+    from createJavaDoc.destinationDir
+}
+
+task createSourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId 'be.stannieman'
+            artifactId 'mvvm'
+            version '1.0.0.0'
+            artifact "$buildDir\\outputs\\aar\\signed-${project.getName()}-release.aar"
+            artifact createJavaDocJar
+            artifact createSourcesJar
+
+            //generate pom nodes for dependencies
+            pom.withXml {
+                def dependenciesNode = asNode().appendNode('dependencies')
+                configurations.compile.allDependencies.each { dependency ->
+                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', dependency.group)
+                    dependencyNode.appendNode('artifactId', dependency.name)
+                    dependencyNode.appendNode('version', dependency.version)
+                }
+            }
+        }
+    }
+
+    repositories{
+        maven {
+            url "$buildDir\\repo"
+        }
+    }
+}
