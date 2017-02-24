@@ -11,14 +11,14 @@ public interface IMessenger {
      * for which it has IHandle<T> implemented where T is the type of the message.
      * @param subscriber handler to subscribe
      */
-    void subScribe(IHandle<?> subscriber);
+    void subScribe(Object subscriber);
 
     /**
      * Unsubscribes a handler from the messenger.
      * The handler will no longer receive any messages.
      * @param subscriber handler to unsubscribe
      */
-    void unSubscribe(IHandle<?> subscriber);
+    void unSubscribe(Object subscriber);
 
     /**
      * Publishes a message to all subscribed handlers that can receive this type of message.

@@ -20,7 +20,7 @@ public final class Messenger implements IMessenger {
     private final IMainThreadHelper mainThreadHelper;
 
     private final Lock subscribersLock = new ReentrantLock();
-    private final Map<IHandle<?>, Object> subscribers;
+    private final Map<Object, Object> subscribers;
 
     /**
      * Constructor that takes an IMainTreadHelper.
@@ -39,7 +39,7 @@ public final class Messenger implements IMessenger {
      * @param subscriber handler to subscribe
      */
     @Override
-    public void subScribe(final IHandle<?> subscriber) {
+    public void subScribe(final Object subscriber) {
         subscribersLock.lock();
         subscribers.put(subscriber, null);
         subscribersLock.unlock();
@@ -51,7 +51,7 @@ public final class Messenger implements IMessenger {
      * @param subscriber handler to unsubscribe
      */
     @Override
-    public void unSubscribe(final IHandle<?> subscriber) {
+    public void unSubscribe(final Object subscriber) {
         subscribersLock.lock();
         subscribers.remove(subscriber);
         subscribersLock.unlock();
@@ -65,13 +65,13 @@ public final class Messenger implements IMessenger {
     @Override
     public <T> void publish(final T message) {
         subscribersLock.lock();
-        final Set<IHandle<?>> copiedSubscribers = subscribers.keySet();
+        final Set<Object> copiedSubscribers = subscribers.keySet();
         subscribersLock.unlock();
 
         mainThreadHelper.postToMainThreadIfNeeded(new Runnable() {
             @Override
             public void run() {
-                for (IHandle<?> subscriber : copiedSubscribers) {
+                for (Object subscriber : copiedSubscribers) {
                     Type[] genericInterfaces = subscriber.getClass().getGenericInterfaces();
                     for (Type genericInterface : genericInterfaces) {
                         if (genericInterface instanceof ParameterizedType) {
