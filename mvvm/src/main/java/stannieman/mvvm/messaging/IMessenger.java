@@ -7,21 +7,23 @@ package stannieman.mvvm.messaging;
 public interface IMessenger {
     /**
      * Subscribes a handler to the messenger.
-     * The subscribed handler will receive all published messages.
+     * The subscribed handler will receive all published messages
+     * for which it has IHandle<T> implemented where T is the type of the message.
      * @param subscriber handler to subscribe
      */
-    void subScribe(IHandle subscriber);
+    void subScribe(IHandle<?> subscriber);
 
     /**
-     * Unsuibscribes a handler from the messenger.
+     * Unsubscribes a handler from the messenger.
      * The handler will no longer receive any messages.
      * @param subscriber handler to unsubscribe
      */
-    void unSubscribe(IHandle subscriber);
+    void unSubscribe(IHandle<?> subscriber);
 
     /**
-     * Publishes a message to all subscribed handlers.
+     * Publishes a message to all subscribed handlers that can receive this type of message.
      * @param message message to publish
+     * @param <T> Type of the message to send.
      */
-    void publish(Object message);
+    <T> void publish(T message);
 }
