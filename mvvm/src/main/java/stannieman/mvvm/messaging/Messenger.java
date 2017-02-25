@@ -39,7 +39,7 @@ public final class Messenger implements IMessenger {
      * @param subscriber handler to subscribe
      */
     @Override
-    public void subScribe(final Object subscriber) {
+    public void subscribe(final Object subscriber) {
         subscribersLock.lock();
         subscribers.put(subscriber, null);
         subscribersLock.unlock();
@@ -51,7 +51,7 @@ public final class Messenger implements IMessenger {
      * @param subscriber handler to unsubscribe
      */
     @Override
-    public void unSubscribe(final Object subscriber) {
+    public void unsubscribe(final Object subscriber) {
         subscribersLock.lock();
         subscribers.remove(subscriber);
         subscribersLock.unlock();
