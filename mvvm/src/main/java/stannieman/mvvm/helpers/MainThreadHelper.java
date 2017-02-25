@@ -3,12 +3,15 @@ package stannieman.mvvm.helpers;
 import android.os.Handler;
 import android.os.Looper;
 
+import javax.inject.Inject;
+
 /**
  * Class to run a runnable on the main thread.
  */
 public final class MainThreadHelper implements IMainThreadHelper {
     private final Handler mainThreadHandler;
 
+    @Inject
     public MainThreadHelper() {
         mainThreadHandler = new Handler(Looper.getMainLooper());
     }
