@@ -3,8 +3,7 @@ package stannieman.mvvm;
 import android.content.Intent;
 import android.databinding.BaseObservable;
 import android.os.Bundle;
-
-import org.jetbrains.annotations.Nullable;
+import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
